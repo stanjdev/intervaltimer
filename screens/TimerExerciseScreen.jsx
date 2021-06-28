@@ -35,14 +35,16 @@ export default function TimerExerciseScreen({ route, navigation }) {
   }; 
 
   const { sets, workTime, rest, bellInterv } = route.params;
-  const [ timerRunning, setTimerRunning ] = useState(true);
 
-  const [ mins, setMins ] = useState(Math.floor(workTime / 60));
-  const [ secs, setSecs ] = useState(workTime % 60);
+  const [ workOrRest, setWorkOrRest ] = useState("work");
+  const [ timerRunning, setTimerRunning ] = useState(true);
+  const [ setsRemaining, setSetsRemaining ] = useState(sets);
+  // const [ mins, setMins ] = useState(Math.floor(workTime / 60));
+  // const [ secs, setSecs ] = useState(workTime % 60);
 
   // // SHORT 2 SEC TEST
-  // const [ mins, setMins ] = useState(0);
-  // const [ secs, setSecs ] = useState(2);
+  const [ mins, setMins ] = useState(0);
+  const [ secs, setSecs ] = useState(2);
 
   // Add leading zero to numbers 9 or below (purely for aesthetics):
   function leadingZero(time) {
@@ -51,7 +53,7 @@ export default function TimerExerciseScreen({ route, navigation }) {
       }
       return time;
   };
-
+  
 
   // useInterval() ATTEMPT - ghetto, but works for the most part. once it hits 00:00, it still hits the else, and still runs every second. BUT DESTRUCTURING THE CLEAR() METHOD FROM USEINTERVAL FUNCTION AND CALLING THAT WORKS!
   // COUNTDOWN - useInterval()
@@ -61,12 +63,21 @@ export default function TimerExerciseScreen({ route, navigation }) {
     } else if (mins >= 1 && secs == 0) {
       setSecs(59);
       setMins(mins - 1);
+    } else if (setsRemaining > 0) {
+      // if still sets exist, continue with work/rest sets
+      setSetsRemaining(setsRemaining - 1);
+      if (workOrRest === "work") {
+        setMins(Math.floor(rest / 60));
+        setSecs(rest % 60);
+        setWorkOrRest("rest")
+      } else if (workOrRest === "rest") {
+        setMins(Math.floor(workTime / 60));
+        setSecs(workTime % 60);
+        setWorkOrRest("work")
+      }
     } else {
-      // incrementSessionsCompleted();
-      Alert.alert("Timer Complete", "Great job, you’ve completed your meditation session!", [
-        {text: "Back", onPress: () => navigation.goBack()}, 
-        {text: "Finish", style: "cancel", onPress: () => navigation.navigate("Profile")}
-      ]);
+      // FINALLY FINISHED
+      setWorkOrRest("complete");
       setTimerRunning(false);
       bellSound.unloadAsync();
       // console.log('else');
@@ -82,6 +93,8 @@ export default function TimerExerciseScreen({ route, navigation }) {
     console.log("sessionSecs: " + sessionSecs);
     setSessionSecs(sessionSecs => sessionSecs += 1);
   }
+
+
 
 
 
@@ -111,7 +124,6 @@ export default function TimerExerciseScreen({ route, navigation }) {
     // // https://docs.expo.io/versions/latest/sdk/audio/?redirected#parameters
   }
 
-
   // FINISHED BELL SOUND
   const finishedSound = new Audio.Sound();
   Audio.setAudioModeAsync({playsInSilentModeIOS: true, staysActiveInBackground: true});
@@ -125,6 +137,10 @@ export default function TimerExerciseScreen({ route, navigation }) {
       console.log(error);
     }
   }
+
+
+
+
 
   const countOff = () => {
     const threeTwoOne = setInterval(() => {
@@ -177,7 +193,11 @@ export default function TimerExerciseScreen({ route, navigation }) {
   const [sessionSecs, setSessionSecs] = useState(0);
 
   const goBack = () => {
-    navigation.goBack();
+    // pause when this is pressed? 
+    Alert.alert("Quit this workout?", "You will have to restart from the beginning if you exit.", [
+      {text: "Go Back", style: "cancel", onPress: () => console.log("continued")}, 
+      {text: "Quit", style: "cancel", onPress: () => navigation.navigate("TimerSetScreen")}
+    ]);
   }
 
   const renderIntervalBalls = () => {
@@ -185,6 +205,7 @@ export default function TimerExerciseScreen({ route, navigation }) {
     for (let i = 0; i < sets; i++) {
       balls.push(<View key={i} style={{ borderColor: "#828282", height: 20, width: 20, borderRadius: 50, borderWidth: 2 }}></View>)
     }
+
     return balls;
   }
 
@@ -208,9 +229,9 @@ export default function TimerExerciseScreen({ route, navigation }) {
         </View>
         
           {countOffDone ? 
-          <View style={{alignItems: "center", padding: 30, borderColor: "#FAFF00", borderWidth: 9, borderRadius: 1000, height: 300}}>
-            <Text style={{color: "#FFFFFF", fontSize: 41}}>{timerRunning ? "WORK" : "PAUSED"}</Text>
-            <Text style={[ styles.timerText, timerRunning ? null : styles.timerStrikeThrough ]}>{`${leadingZero(mins)}:${leadingZero(secs)}`}</Text>
+          <View style={{alignItems: "center", padding: 30, borderColor: workOrRest == "work" ? "#FAFF00" : workOrRest == "rest" ? "#2D9CDB" : "#6FCF97", borderWidth: 9, borderRadius: 1000, height: 300}}>
+            <Text style={{color: "#FFFFFF", fontSize: 41}}>{timerRunning && workOrRest == "work" ? "WORK" : timerRunning && workOrRest == "rest" ? "REST" : workOrRest == "complete" ? "WORKOUT COMPLETE" : "PAUSED"}</Text>
+            <Text style={[ styles.timerText, timerRunning ? null : styles.timerStrikeThrough ]}>{workOrRest == "complete" ? null : `${leadingZero(mins)}:${leadingZero(secs)}`}</Text>
           </View>
           : 
           <View style={{alignItems: "center", padding: 30, borderWidth: 9, borderRadius: 1000, height: 300}}>
@@ -221,7 +242,7 @@ export default function TimerExerciseScreen({ route, navigation }) {
         
 
           <View>
-            <Text style={{ color: "#828282", fontSize: 20 }}>INTERVAL {sets}</Text>
+            <Text style={{ color: "#828282", fontSize: 20 }}>INTERVAL {`${sets - setsRemaining > 0 ? sets - setsRemaining : 1}/${sets}`}</Text>
             <View style={{ flexDirection: "row", width: width * 0.5, justifyContent: "space-between", marginTop: 15}}>
               {renderIntervalBalls()}
               {/* <View style={{ borderColor: "#FAFF00", backgroundColor: "#FAFF00", height: 20, width: 20, borderRadius: 50, borderWidth: 2 }}></View>
