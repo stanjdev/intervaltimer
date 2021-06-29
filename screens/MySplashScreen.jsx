@@ -1,23 +1,30 @@
 import React, { useEffect } from 'react';
 import { Text, View, StyleSheet, StatusBar, Dimensions } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
 import AppButton from '../components/AppButton';
 const { width, height } = Dimensions.get('window');
 
 export default function MySplashScreen ({ route, navigation }) {
   const isFocused = useIsFocused();
 
+  let [fontsLoaded] = useFonts({
+    'SourceCodePro-Regular': require('../assets/fonts/Source_Code_Pro/SourceCodePro-Regular.ttf'),
+    'SourceCodePro-Medium': require('../assets/fonts/Source_Code_Pro/SourceCodePro-Medium.ttf'),
+    'SourceCodePro-SemiBold': require('../assets/fonts/Source_Code_Pro/SourceCodePro-SemiBold.ttf'),
+  });
+
   const navTo = () => route.params ? 
                       navigation.navigate('TimerSetScreen')
                     : navigation.navigate('TimerSetScreen', { screen: 'Meditate' })
 
-  useEffect(() => {
-    let timeout = setTimeout(() => {
-      navTo();
-    }, 3000);
+  // useEffect(() => {
+  //   let timeout = setTimeout(() => {
+  //     navTo();
+  //   }, 3000);
 
-    return () => clearTimeout(timeout);
-  }, [isFocused])
+  //   return () => clearTimeout(timeout);
+  // }, [isFocused])
 
   return (
     <View style={styles.container}>
@@ -28,8 +35,8 @@ export default function MySplashScreen ({ route, navigation }) {
           onPress={navTo}
         />
         <View style={{height: height, width: width, justifyContent: "center", alignItems: "center"}}>
-          <Text style={styles.titleText}>Interval Timer</Text>
-          <Text style={styles.subTitleText}>by Semicircle Labs</Text>
+          <Text style={[styles.titleText, styles.sourceCodeProMedium]}>INTERVAL TIMER</Text>
+          <Text style={[styles.subTitleText, styles.sourceCodeProMedium]}>by Semicircle Labs</Text>
         </View>
         {/* <Image 
           source={require('../assets/splash/memoir-splash.png')}
@@ -80,10 +87,14 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: "white",
-    fontSize: 30
+    fontSize: 30,
+    marginBottom: 15
   },
   subTitleText: {
     color: "#828282",
-    fontSize: 20
+    fontSize: 20,
+  },
+  sourceCodeProMedium: {
+    fontFamily: 'SourceCodePro-Medium'
   }
 });

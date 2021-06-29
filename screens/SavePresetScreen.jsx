@@ -10,9 +10,9 @@ export default function SavePresetScreen({ navigation, route }) {
   const isFocused = useIsFocused();
 
   let [fontsLoaded] = useFonts({
-    'Assistant': require('../assets/fonts/Assistant/Assistant-VariableFont_wght.ttf'),
-    'Assistant-Regular': require('../assets/fonts/Assistant/static/Assistant-Regular.ttf'),
-    'Assistant-SemiBold': require('../assets/fonts/Assistant/static/Assistant-SemiBold.ttf'),
+    'SourceCodePro-Regular': require('../assets/fonts/Source_Code_Pro/SourceCodePro-Regular.ttf'),
+    'SourceCodePro-Medium': require('../assets/fonts/Source_Code_Pro/SourceCodePro-Medium.ttf'),
+    'SourceCodePro-SemiBold': require('../assets/fonts/Source_Code_Pro/SourceCodePro-SemiBold.ttf'),
   });
     
   const { sets, workTime, rest } = route.params;
@@ -29,25 +29,25 @@ export default function SavePresetScreen({ navigation, route }) {
         <View style={{flexDirection: "row"}}>
           <View style={{backgroundColor: "black", flex: 1, height: height * 0.85, alignItems: "center" }}>
             
-            <View style={{ alignItems: "center", justifyContent: "space-between", height: 150, marginBottom: 200 }}>
-              <Text style={{textAlign: "center", fontSize: 14, fontFamily: "Assistant-SemiBold", color: "#FFF"}}>NAME YOUR PRESET</Text>
+            <View style={{ alignItems: "center", justifyContent: "space-between", height: 150, marginBottom: height > 700 ? 175 : 100 }}>
+              <Text style={{textAlign: "center", fontSize: 14, fontFamily: "SourceCodePro-Medium", color: "#FFF"}}>NAME YOUR PRESET</Text>
               <TextInput 
                 placeholder="NEW WORKOUT" 
                 placeholderTextColor="#828282" 
-                style={{ 
+                style={[{ 
                   backgroundColor: "#333333", 
                   color: "#FFFFFF", 
                   fontSize: 24, 
                   textAlign: "center", 
                   height: 46, 
                   width: width * 0.9, 
-                  borderRadius: 8 
-              }}>
+                  borderRadius: 8,
+              }, styles.sourceCodeProMedium]}>
               </TextInput>
               <View style={{flexDirection: "row", justifyContent: "space-around", width: width}}>
-                <Text style={{ fontSize: 14, fontFamily: "Assistant-SemiBold", color: "#FFF", }}>{sets} SETS</Text>
-                <Text style={{ fontSize: 14, fontFamily: "Assistant-SemiBold", color: "#FFF", }}>{`${Math.floor(workTime / 60)}:${workTime % 60 || "00"}`} WORK</Text>
-                <Text style={{ fontSize: 14, fontFamily: "Assistant-SemiBold", color: "#FFF", }}>{`${Math.floor(rest / 60)}:${rest % 60 || "00"}`} REST</Text>
+                <Text style={{ fontSize: 14, fontFamily: "SourceCodePro-Medium", color: "#FFF", }}>{sets} SETS</Text>
+                <Text style={{ fontSize: 14, fontFamily: "SourceCodePro-Medium", color: "#FFF", }}>{`${Math.floor(workTime / 60)}:${workTime % 60 || "00"}`} WORK</Text>
+                <Text style={{ fontSize: 14, fontFamily: "SourceCodePro-Medium", color: "#FFF", }}>{`${Math.floor(rest / 60)}:${rest % 60 || "00"}`} REST</Text>
               </View>
             </View>
 
@@ -82,8 +82,17 @@ const styles = StyleSheet.create({
     color: "#000",
     flex: 1,
     textAlign: "center",
-    fontSize: 22,
+    fontSize: 19,
     letterSpacing: 1,
-    fontFamily: "Assistant-SemiBold"
+    fontFamily: "SourceCodePro-Medium"
+  },
+  sourceCodeProRegular: {
+    fontFamily: "SourceCodePro-Regular"
+  },
+  sourceCodeProSemiBold: {
+    fontFamily: "SourceCodePro-SemiBold"
+  },
+  sourceCodeProMedium: {
+    fontFamily: "SourceCodePro-Medium"
   }
 });

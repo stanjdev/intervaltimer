@@ -18,9 +18,9 @@ export default function TimerExerciseScreen({ route, navigation }) {
   let [countOffNum, setCountOffNum] = useState(3);
 
   let [fontsLoaded] = useFonts({
-    'Assistant': require('../assets/fonts/Assistant/Assistant-VariableFont_wght.ttf'),
-    'Assistant-Regular': require('../assets/fonts/Assistant/static/Assistant-Regular.ttf'),
-    'Assistant-SemiBold': require('../assets/fonts/Assistant/static/Assistant-SemiBold.ttf'),
+    'SourceCodePro-Regular': require('../assets/fonts/Source_Code_Pro/SourceCodePro-Regular.ttf'),
+    'SourceCodePro-Medium': require('../assets/fonts/Source_Code_Pro/SourceCodePro-Medium.ttf'),
+    'SourceCodePro-SemiBold': require('../assets/fonts/Source_Code_Pro/SourceCodePro-SemiBold.ttf'),
   });
   
   const [ overlay, setOverlay ] = useState(true);
@@ -214,35 +214,35 @@ export default function TimerExerciseScreen({ route, navigation }) {
     <View style={{ flex: 1, resizeMode: "cover", position: "relative", zIndex: -10, backgroundColor: "#000000"}}>
       {isFocused ? <StatusBar hidden={false} barStyle="light-content"/> : null} 
 
-      <View style={{ width: width, flexDirection: "row", alignItems: "center", marginTop: height * 0.07, position: "absolute", zIndex: 100 }}>
+      <View style={{ width: width, flexDirection: "row", alignItems: "center", marginTop: height < 700 ? 40 : height * 0.07, position: "absolute", zIndex: 100 }}>
         <TouchableOpacity onPress={goBack} style={{ padding: 15}}>
           <Image source={require('../assets/screen-icons/back-arrow-white.png')} style={{height: 20, marginLeft: 0}} resizeMode="contain"/>
         </TouchableOpacity>
-        <Text style={{textAlign: "center", fontSize: 20, fontFamily: "Assistant-SemiBold", color: "#828282", position: "absolute", zIndex: -1, width: width}}>LEG DAY #2</Text>        
+        <Text style={[{textAlign: "center", fontSize: 20, color: "#828282", position: "absolute", zIndex: -1, width: width}, styles.sourceCodeProMedium]}>LEG DAY #2</Text>        
       </View>
 
-      <View style={{ justifyContent: "space-evenly", alignItems: "center", position: "absolute", height: height, width: width, marginTop: 25 }}>
-        <View style={{flexDirection: "row", justifyContent: "space-around", width: width}}>
-          <Text style={{ fontSize: 14, fontFamily: "Assistant-SemiBold", color: "#828282", }}>{sets} SETS</Text>
-          <Text style={{ fontSize: 14, fontFamily: "Assistant-SemiBold", color: "#828282", }}>{`${Math.floor(workTime / 60)}:${workTime % 60 || "00"}`} WORK</Text>
-          <Text style={{ fontSize: 14, fontFamily: "Assistant-SemiBold", color: "#828282", }}>{`${Math.floor(rest / 60)}:${rest % 60 || "00"}`} REST</Text>
+      <View style={{ justifyContent: "space-evenly", alignItems: "center", height: height * 0.96, width: width, marginTop: 25 }}>
+        <View style={{flexDirection: "row", justifyContent: "space-around", width: width, marginTop: height < 700 ? 50 : 25}}>
+          <Text style={[{ fontSize: 14, color: "#828282", }, styles.sourceCodeProMedium]}>{sets} SETS</Text>
+          <Text style={[{ fontSize: 14, color: "#828282", }, styles.sourceCodeProMedium]}>{`${Math.floor(workTime / 60)}:${workTime % 60 || "00"}`} WORK</Text>
+          <Text style={[{ fontSize: 14, color: "#828282", }, styles.sourceCodeProMedium]}>{`${Math.floor(rest / 60)}:${rest % 60 || "00"}`} REST</Text>
         </View>
         
           {countOffDone ? 
-          <View style={{alignItems: "center", padding: 30, borderColor: workOrRest == "work" ? "#FAFF00" : workOrRest == "rest" ? "#2D9CDB" : "#6FCF97", borderWidth: 9, borderRadius: 1000, height: 300}}>
-            <Text style={{color: "#FFFFFF", fontSize: 41}}>{timerRunning && workOrRest == "work" ? "WORK" : timerRunning && workOrRest == "rest" ? "REST" : workOrRest == "complete" ? "WORKOUT COMPLETE" : "PAUSED"}</Text>
-            <Text style={[ styles.timerText, timerRunning ? null : styles.timerStrikeThrough ]}>{workOrRest == "complete" ? null : `${leadingZero(mins)}:${leadingZero(secs)}`}</Text>
+          <View style={{alignItems: "center", justifyContent: "center", padding: 30, borderColor: workOrRest == "work" ? "#FAFF00" : workOrRest == "rest" ? "#2D9CDB" : "#6FCF97", borderWidth: 9, borderRadius: 1000, height: 312, width: 312}}>
+            <Text style={[{color: "#FFFFFF", fontSize: 41}, styles.sourceCodeProMedium]}>{timerRunning && workOrRest == "work" ? "WORK" : timerRunning && workOrRest == "rest" ? "REST" : workOrRest == "complete" ? "WORKOUT COMPLETE" : "PAUSED"}</Text>
+            <Text style={[ styles.timerText, timerRunning ? null : styles.timerStrikeThrough ]}>{workOrRest == "complete" ? null : `${mins}:${leadingZero(secs)}`}</Text>
           </View>
           : 
           <View style={{alignItems: "center", padding: 30, borderWidth: 9, borderRadius: 1000, height: 300}}>
-            <Text style={{color: "#FFFFFF", fontSize: 30}}>STARTING IN</Text>
-            <Text style={{color: "#FAFF00", fontSize: 120 }}>{countOffNum}</Text>
+            <Text style={[{color: "#FFFFFF", fontSize: 30}, styles.sourceCodeProMedium]}>STARTING IN</Text>
+            <Text style={[{color: "#FAFF00", fontSize: 120}, styles.sourceCodeProMedium]}>{countOffNum}</Text>
           </View>
           }
         
 
           <View>
-            <Text style={{ color: "#828282", fontSize: 20 }}>INTERVAL {`${sets - setsRemaining > 0 ? sets - setsRemaining : 1}/${sets}`}</Text>
+            <Text style={[{ color: "#828282", fontSize: 20 }, styles.sourceCodeProMedium]}>INTERVAL {`${sets - setsRemaining > 0 ? sets - setsRemaining : 1}/${sets}`}</Text>
             <View style={{ flexDirection: "row", width: width * 0.5, justifyContent: "space-between", marginTop: 15}}>
               {renderIntervalBalls()}
               {/* <View style={{ borderColor: "#FAFF00", backgroundColor: "#FAFF00", height: 20, width: 20, borderRadius: 50, borderWidth: 2 }}></View>
@@ -256,6 +256,8 @@ export default function TimerExerciseScreen({ route, navigation }) {
             countOffDone ? 
               <AppButton 
                 title={timerRunning ? "PAUSE" : "Resume"}
+                icon={timerRunning ? require('../assets/screen-icons/pause.png') : require('../assets/screen-icons/start.png')}
+                iconStyles={{height: 14, width: 12 }}
                 buttonStyles={[styles.button, timerRunning ? styles.greyButton : styles.yellowButton]}
                 buttonTextStyles={[styles.buttonText, timerRunning ? styles.whiteText : styles.blacktext]}
                 onPress={() => toggle()}
@@ -293,11 +295,10 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#000",
-    flex: 1,
-    textAlign: "center",
-    fontSize: 22,
+    paddingLeft: 13,
+    fontSize: 19,
     letterSpacing: 1,
-    fontFamily: "Assistant-SemiBold"
+    fontFamily: "SourceCodePro-Medium"
   },
   whiteText: {
     color: "#FFF"
@@ -306,12 +307,22 @@ const styles = StyleSheet.create({
     color: "#000"
   },
   timerText: {
-    fontFamily: "Assistant-SemiBold", 
+    fontFamily: "SourceCodePro-Medium", 
     color: "white", 
-    fontSize: 100, 
+    fontSize: 100,
+    marginTop: -15
   },
   timerStrikeThrough: { 
     textDecorationLine: "line-through",
     color: "#828282"
+  },
+  sourceCodeProRegular: {
+    fontFamily: "SourceCodePro-Regular"
+  },
+  sourceCodeProSemiBold: {
+    fontFamily: "SourceCodePro-SemiBold"
+  },
+  sourceCodeProMedium: {
+    fontFamily: "SourceCodePro-Medium"
   }
 });

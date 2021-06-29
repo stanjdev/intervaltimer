@@ -4,6 +4,7 @@ import Slider from '@react-native-community/slider';
 import AppButton from '../components/AppButton';
 import { useIsFocused } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
+import * as Font from 'expo-font';
 import * as Haptics from 'expo-haptics';
 
 const { width, height } = Dimensions.get('window');
@@ -60,10 +61,18 @@ export default function TimerSetScreen({ navigation, route }) {
   const isFocused = useIsFocused();
 
   let [fontsLoaded] = useFonts({
-    'Assistant': require('../assets/fonts/Assistant/Assistant-VariableFont_wght.ttf'),
-    'Assistant-Regular': require('../assets/fonts/Assistant/static/Assistant-Regular.ttf'),
-    'Assistant-SemiBold': require('../assets/fonts/Assistant/static/Assistant-SemiBold.ttf'),
+    'SourceCodePro-Regular': require('../assets/fonts/Source_Code_Pro/SourceCodePro-Regular.ttf'),
+    'SourceCodePro-Medium': require('../assets/fonts/Source_Code_Pro/SourceCodePro-Medium.ttf'),
+    'SourceCodePro-SemiBold': require('../assets/fonts/Source_Code_Pro/SourceCodePro-SemiBold.ttf'),
   });
+
+  // useEffect(() => {
+  //   (async () => await Font.loadAsync({
+  //     'SourceCodePro-Regular': require('../assets/fonts/Source_Code_Pro/SourceCodePro-Regular.ttf'),
+  //     'SourceCodePro-Medium': require('../assets/fonts/Source_Code_Pro/SourceCodePro-Medium.ttf'),
+  //     'SourceCodePro-SemiBold': require('../assets/fonts/Source_Code_Pro/SourceCodePro-SemiBold.ttf'),
+  //   }))
+  // }, [])
 
   const startTimerExercise = () => {
     // incrementStreak();
@@ -75,20 +84,20 @@ export default function TimerSetScreen({ navigation, route }) {
   return (
     <View style={{ flex: 1, resizeMode: "cover", justifyContent: "center", backgroundColor: "black" }}>
       {isFocused ? <StatusBar hidden={false} barStyle="light-content"/> : null} 
-      <TouchableOpacity onPress={() => navigation.goBack()} style={{position: "absolute", top: height * 0.065, zIndex: 100, padding: 15}}>
-        <Image source={require('../assets/screen-icons/back-arrow-white.png')} style={{height: 20, }} resizeMode="contain"/>
+      <TouchableOpacity onPress={() => console.log("to library!")} style={{ padding: 10, position: "absolute", top: height * 0.068, zIndex: 100, left: 10,   }}>
+        <Image source={require('../assets/screen-icons/library.png')} style={{ height: 13, width: 23 }} resizeMode="contain"/>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('SavePresetScreen', { sets, workTime, rest })} style={{ position: "absolute", right: width * 0.05, top: height * 0.065, zIndex: 100, paddingBottom: 10, paddingTop: 10 }}>
-        <Image source={require('../assets/screen-icons/gear-grey.png')} style={{height: 32, width: 60}} resizeMode="contain"/>
+      <TouchableOpacity onPress={() => navigation.navigate('SavePresetScreen', { sets, workTime, rest })} style={{ padding: 10, position: "absolute", top: height * 0.063, right: width * 0.05, zIndex: 100,  }}>
+        <Image source={require('../assets/screen-icons/plus-symbol.png')} style={{height: 20, width: 20}} resizeMode="contain"/>
       </TouchableOpacity>
       <View style={{marginTop: 20}}>
-        <Text style={{textAlign: "center", fontSize: 23, fontFamily: "Assistant-SemiBold", color: "#828282"}}>New Workout</Text>
+        <Text style={ [{textAlign: "center", fontSize: 20, color: "#828282"}, styles.sourceCodeProMedium] }>NEW WORKOUT</Text>
         <View style={{flexDirection: "row", padding: 20}}>
           <View style={{backgroundColor: "black", flex: 1, height: height * 0.8, justifyContent: "space-around", alignItems: "center" }}>
 
             <View style={{alignItems: "center"}}>
-              <Text style={{color: "#FFFFFF", fontSize: 32}}>{`${Math.floor(totalDuration / 60)}:${(totalDuration % 60) || "00"}`}</Text>
-              <Text style={{color: "#828282", fontSize: 18}}>TOTAL DURATION</Text>
+              <Text style={[{color: "#FFFFFF", fontSize: 32}, styles.sourceCodeProMedium]}>{`${Math.floor(totalDuration / 60)}:${(totalDuration % 60) || "00"}`}</Text>
+              <Text style={[{color: "#828282", fontSize: 18}, styles.sourceCodeProMedium]}>TOTAL DURATION</Text>
             </View>
 
             <View style={{width: width * 0.63, height: height * 0.45, justifyContent: "space-around", alignItems: "center"}}>
@@ -113,7 +122,9 @@ export default function TimerSetScreen({ navigation, route }) {
             </View>
 
             <AppButton 
-              title="START" 
+              title="START"
+              icon={require('../assets/screen-icons/start.png')}
+              iconStyles={{height: 14, width: 11 }}
               buttonStyles={styles.yellowButton}
               buttonTextStyles={styles.buttonText}
               onPress={startTimerExercise}
@@ -130,9 +141,9 @@ const SliderComponent = ({name, state, maxValue, onChange, }) => {
   return (
     <View style={{alignItems: "center"}}>
       <View style={{flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: width * 0.8}}>
-        <Text style={{fontFamily: "Assistant-SemiBold", fontSize: height < 600 ? 18 : 20, color: "#FFFFFF"}}>{name}</Text>
-        <View style={{ height: 36, padding: 4, backgroundColor: "#333333", borderRadius: 8}}>
-          <Text style={{ fontSize: height < 600 ? 20 : 22, color: "#FFFFFF", }}>{name === "SETS" ? state : `${Math.floor(state / 60)}:${(state % 60) || "00"}`}</Text>
+        <Text style={[ styles.sourceCodeProMedium, {fontSize: height < 600 ? 18 : 22, color: "#FFFFFF"} ]}>{name}</Text>
+        <View style={{ height: 36, padding: 4.5, backgroundColor: "#333333", borderRadius: 8}}>
+          <Text style={[ styles.sourceCodeProMedium, { fontSize: height < 600 ? 20 : 22, color: "#FFFFFF" }]}>{name === "SETS" ? state : `${Math.floor(state / 60)}:${(state % 60) || "00"}`}</Text>
         </View>
       </View>
       
@@ -143,7 +154,7 @@ const SliderComponent = ({name, state, maxValue, onChange, }) => {
         maximumValue={maxValue}
         value={name === "SETS" ? state : Math.floor(state / 60)}
         minimumTrackTintColor="#FAFF00"
-        maximumTrackTintColor="#000000"
+        maximumTrackTintColor="#3C3C43"
         step={1}
       />
     </View>
@@ -161,14 +172,24 @@ const styles = StyleSheet.create({
     shadowRadius: 7,
     shadowColor: "black",
     shadowOpacity: 0.2,
-    shadowOffset: {width: 3, height: 3}
+    shadowOffset: {width: 3, height: 3},
   },
   buttonText: {
     color: "#000",
-    flex: 1,
-    textAlign: "center",
-    fontSize: 22,
+    // flex: 1,
+    // textAlign: "center",
+    paddingLeft: 13,
+    fontSize: 19,
     letterSpacing: 1,
-    fontFamily: "Assistant-SemiBold"
+    fontFamily: "SourceCodePro-Medium"
+  },
+  sourceCodeProRegular: {
+    fontFamily: "SourceCodePro-Regular"
+  },
+  sourceCodeProSemiBold: {
+    fontFamily: "SourceCodePro-SemiBold"
+  },
+  sourceCodeProMedium: {
+    fontFamily: "SourceCodePro-Medium"
   }
 });
