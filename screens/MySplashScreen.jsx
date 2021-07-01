@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { Text, View, StyleSheet, StatusBar, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, StatusBar, Dimensions, ImageBackground } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import AppButton from '../components/AppButton';
 const { width, height } = Dimensions.get('window');
+const bgImage = require('../assets/splash/splash-screen-ellipse.png')
 
 export default function MySplashScreen ({ route, navigation }) {
   const isFocused = useIsFocused();
@@ -18,13 +19,13 @@ export default function MySplashScreen ({ route, navigation }) {
                       navigation.navigate('TimerSetScreen')
                     : navigation.navigate('TimerSetScreen', { screen: 'Meditate' })
 
-  // useEffect(() => {
-  //   let timeout = setTimeout(() => {
-  //     navTo();
-  //   }, 3000);
+  useEffect(() => {
+    let timeout = setTimeout(() => {
+      navTo();
+    }, 3000);
 
-  //   return () => clearTimeout(timeout);
-  // }, [isFocused])
+    return () => clearTimeout(timeout);
+  }, [isFocused])
 
   return (
     <View style={styles.container}>
@@ -35,13 +36,11 @@ export default function MySplashScreen ({ route, navigation }) {
           onPress={navTo}
         />
         <View style={{height: height, width: width, justifyContent: "center", alignItems: "center"}}>
-          <Text style={[styles.titleText, styles.sourceCodeProMedium]}>INTERVAL TIMER</Text>
-          <Text style={[styles.subTitleText, styles.sourceCodeProMedium]}>by Semicircle Labs</Text>
+          <ImageBackground source={bgImage} style={styles.image}>
+            <Text style={[styles.titleText, styles.sourceCodeProMedium]}>INTERVAL TIMER</Text>
+            <Text style={[styles.subTitleText, styles.sourceCodeProMedium]}>by Semicircle Labs</Text>
+          </ImageBackground>
         </View>
-        {/* <Image 
-          source={require('../assets/splash/memoir-splash.png')}
-          style={styles.image}
-        /> */}
       </View>
     </View>
   )
@@ -50,11 +49,14 @@ export default function MySplashScreen ({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black"
+    backgroundColor: "black",
   },
   image: {
-    height: height,
-    width: width,
+    height: 312,
+    width: 312,
+    resizeMode: "contain",
+    justifyContent: "center",
+    alignItems: "center"
   },
   body: {
     flex: 2,

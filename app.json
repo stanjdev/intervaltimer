@@ -1,12 +1,13 @@
 {
   "expo": {
     "name": "Interval Timer",
-    "description": "Interval Timer app description",
+    "description": "Interval Timer by Semicircle Labs",
     "slug": "Interval-Timer",
-    "version": "1.1.7",
+    "version": "1",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
     "splash": {
+      "image": "./assets/screen-icons/splash-screen-ellipse.png",
       "resizeMode": "cover",
       "backgroundColor": "#000000"
     },
@@ -15,10 +16,7 @@
     },
     "assetBundlePatterns": [
       "**/*",
-      "assets/exercises-images/*",
       "assets/audio/*",
-      "assets/splash/*",
-      "assets/video-exercises/*",
       "assets/screen-icons/*"
     ],
     "facebookScheme": "fb200817071551403",
@@ -36,7 +34,7 @@
     },
     "android": {
       "package": "com.memoir.memoir",
-      "versionCode": 7,
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/app-icon.png",
         "backgroundColor": "#FFFFFF"
