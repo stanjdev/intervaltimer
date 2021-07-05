@@ -7,7 +7,7 @@
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
     "splash": {
-      "image": "./assets/screen-icons/splash-screen-ellipse.png",
+      "image": "./assets/splash/splash-screen-ellipse.png",
       "resizeMode": "cover",
       "backgroundColor": "#000000"
     },

@@ -16,7 +16,7 @@ export default function TimerExerciseScreen({ route, navigation }) {
   const isFocused = useIsFocused();
 
   const [countOffDone, setCountOffDone] = useState(false);
-  let [countOffNum, setCountOffNum] = useState(3);
+  const [countOffNum, setCountOffNum] = useState(3);
 
   let [fontsLoaded] = useFonts({
     'SourceCodePro-Regular': require('../assets/fonts/Source_Code_Pro/SourceCodePro-Regular.ttf'),
@@ -216,19 +216,43 @@ export default function TimerExerciseScreen({ route, navigation }) {
     ]);
   }
 
-  const restart = () => {
-    console.log(workTime, rest)
-    console.log(bellInterv);
-    setTimerRunning(true);
-    
-    setMins(Math.floor(rest / 60));
-    setSecs(rest % 60);
-    setMins(Math.floor(workTime / 60));
-    setSecs(workTime % 60);
-    toggleClock();
-  }
 
   let currentSet = sets - setsRemaining;
+  // const [ currentSet, setCurrentSet ] = useState(sets - setsRemaining);
+
+
+  const restart = () => {
+    console.log(workTime, rest);
+    console.log(bellInterv);
+
+    // setCurrentSet(0);
+    currentSet = 0;
+    setSetsRemaining(sets);
+    setWorkOrRest("work");
+    
+    // setMins(Math.floor(rest / 60));
+    // setSecs(rest % 60);
+    // setMins(Math.floor(workTime / 60));
+    // setSecs(workTime % 60);
+
+    setMins(0);
+    setSecs(1);
+    
+    setCountOffDone(false);
+    setCountOffNum(3);
+    countOff();
+    setTimeout(() => {
+      if (runningClock) {
+        setTimerRunning(true);
+        console.log("RUNNING CLOCK, Clock toggled!");
+        toggleClock();
+        toggleClock();
+        setSetsRemaining(sets - 1);
+      } 
+    }, 3000);
+    
+  }
+
 
   const renderIntervalBalls = () => {
     let balls = [];
@@ -245,7 +269,7 @@ export default function TimerExerciseScreen({ route, navigation }) {
         marginTop: 3,
         marginBottom: 3,
       }}></View>)
-      console.log(i, currentSet, sets);
+      // console.log(i, currentSet, sets);
     }
     return balls;
   }
