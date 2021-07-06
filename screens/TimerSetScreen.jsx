@@ -30,7 +30,7 @@ export default function TimerSetScreen({ navigation, route }) {
 
   useEffect(() => {
     setTotalDuration(sets * (workTime + rest) - rest);
-    console.log(totalDuration);
+    // console.log(totalDuration);
   }, [sets, workTime, rest])
 
   const onChangeSecs = async (value) => {

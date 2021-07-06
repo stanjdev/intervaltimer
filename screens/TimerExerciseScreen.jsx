@@ -40,12 +40,12 @@ export default function TimerExerciseScreen({ route, navigation }) {
   const [ workOrRest, setWorkOrRest ] = useState("work");
   const [ timerRunning, setTimerRunning ] = useState(true);
   const [ setsRemaining, setSetsRemaining ] = useState(sets);
-  // const [ mins, setMins ] = useState(Math.floor(workTime / 60));
-  // const [ secs, setSecs ] = useState(workTime % 60);
+  const [ mins, setMins ] = useState(Math.floor(workTime / 60));
+  const [ secs, setSecs ] = useState(workTime % 60);
 
-  // // SHORT 2 SEC TEST
-  const [ mins, setMins ] = useState(0);
-  const [ secs, setSecs ] = useState(2);
+  // // // SHORT 2 SEC TEST
+  // const [ mins, setMins ] = useState(0);
+  // const [ secs, setSecs ] = useState(2);
 
   // Add leading zero to numbers 9 or below (purely for aesthetics):
   function leadingZero(time) {
@@ -68,22 +68,22 @@ export default function TimerExerciseScreen({ route, navigation }) {
       // if still sets exist, continue with work/rest sets
       console.log("sets remaining: ", setsRemaining);
       if (workOrRest === "work") {
-        // setMins(Math.floor(rest / 60));
-        // setSecs(rest % 60);
+        setMins(Math.floor(rest / 60));
+        setSecs(rest % 60);
         
-        // // SHORT 2 SEC TEST
-        setMins(0);
-        setSecs(2);
+        // // // SHORT 2 SEC TEST
+        // setMins(0);
+        // setSecs(2);
 
         setWorkOrRest("rest");
       } else if (workOrRest === "rest") {
         setSetsRemaining(setsRemaining - 1);
-        // setMins(Math.floor(workTime / 60));
-        // setSecs(workTime % 60);
+        setMins(Math.floor(workTime / 60));
+        setSecs(workTime % 60);
         
-        // // SHORT 2 SEC TEST
-        setMins(0);
-        setSecs(2);
+        // // // SHORT 2 SEC TEST
+        // setMins(0);
+        // setSecs(2);
         
         setWorkOrRest("work");
       }
@@ -230,13 +230,14 @@ export default function TimerExerciseScreen({ route, navigation }) {
     setSetsRemaining(sets);
     setWorkOrRest("work");
     
-    // setMins(Math.floor(rest / 60));
-    // setSecs(rest % 60);
-    // setMins(Math.floor(workTime / 60));
-    // setSecs(workTime % 60);
+    setMins(Math.floor(rest / 60));
+    setSecs(rest % 60);
+    setMins(Math.floor(workTime / 60));
+    setSecs(workTime % 60);
 
-    setMins(0);
-    setSecs(1);
+    // // // SHORT 1 SEC TEST
+    // setMins(0);
+    // setSecs(1);
     
     setCountOffDone(false);
     setCountOffNum(3);
@@ -299,23 +300,52 @@ export default function TimerExerciseScreen({ route, navigation }) {
         </View>
         
           {countOffDone ? 
-          <View style={[styles.mainCircle, {
-            borderColor: workOrRest == "work" ? "#FAFF00" : workOrRest == "rest" ? "#2D9CDB" : "#6FCF97",
-            // backgroundColor: workOrRest == "work" ? "linear-gradient(347.78deg, #FAFF00 13.14%, rgba(250, 255, 0, 0) 87.81%);" : workOrRest == "rest" ? "#2D9CDB" : "#6FCF97",
-          }]}>
-            {/* <LinearGradient 
-            colors={['#4c669f', '#3b5998', '#192f6a']} 
-            start={{x: 0.2, y: 0.2}}
-            end={{x: 0.5, y: 0.1}}
-            locations={[0.5, 0.8]}
-            style={{    
-              height: 312, 
-              width: 312
-            }}> */}
-              <Text style={[{color: "#FFFFFF", fontSize: workOrRest == "complete" ? 48 : 41, textAlign: "center"}, styles.sourceCodeProMedium]}>{timerRunning && workOrRest == "work" ? "WORK" : timerRunning && workOrRest == "rest" ? "REST" : workOrRest == "complete" ? "WORKOUT COMPLETE" : "PAUSED"}</Text>
-              <Text style={[ styles.timerText, timerRunning ? null : styles.timerStrikeThrough ]}>{workOrRest == "complete" ? null : `${mins}:${leadingZero(secs)}`}</Text>
-            {/* </LinearGradient> */}
-          </View>
+          // <View style={{
+          //   borderColor: "#4F4F4F",
+          //   borderWidth: 9,
+          //   borderRadius: 1000,
+          //   alignItems: "center",
+          //   justifyContent: "center",
+          //   padding: 30, 
+          //   height: 312, 
+          //   width: 312
+          // }}>
+            <View style={[styles.mainCircle, {
+              borderColor: workOrRest == "work" ? "#FAFF00" : workOrRest == "rest" ? "#2D9CDB" : "#6FCF97",
+              // backgroundColor: workOrRest == "work" ? "linear-gradient(347.78deg, #FAFF00 13.14%, rgba(250, 255, 0, 0) 87.81%);" : workOrRest == "rest" ? "#2D9CDB" : "#6FCF97",
+            }]}>
+              {/* <LinearGradient 
+              colors={['#FAFF00', '#3b5998', '#2D9CDB']} 
+              start={{x: 0.2, y: 0.2}}
+              end={{x: 0.5, y: 0.1}}
+              locations={[0.5, 0.8, 0.3]}
+              style={{    
+                height: 312, 
+                width: 312,
+                borderRadius: 170,
+                position: "absolute",
+                opacity: 0.6,
+              }}></LinearGradient> */}
+              {/* <View style={{
+                opacity: 0.4,
+                borderColor: workOrRest == "work" ? "#FAFF00" : workOrRest == "rest" ? "#2D9CDB" : "#6FCF97",
+                backgroundColor: workOrRest == "work" ? "#FAFF00" : workOrRest == "rest" ? "#2D9CDB" : "#6FCF97",
+                borderWidth: 9,
+                borderTopLeftRadius: 1000,
+                borderBottomLeftRadius: 1000,
+                height: 312, 
+                width: 312,
+                position: "absolute",
+                // left: 0,
+                transform: [ 
+                  { rotate: secs * 0.10 },
+                ]
+              }}></View> */}
+                <Text style={[{color: "#FFFFFF", fontSize: workOrRest == "complete" ? 48 : 41, textAlign: "center"}, styles.sourceCodeProMedium]}>{timerRunning && workOrRest == "work" ? "WORK" : timerRunning && workOrRest == "rest" ? "REST" : workOrRest == "complete" ? "WORKOUT COMPLETE" : "PAUSED"}</Text>
+                <Text style={[ styles.timerText, timerRunning ? null : styles.timerStrikeThrough ]}>{workOrRest == "complete" ? null : `${mins}:${leadingZero(secs)}`}</Text>
+              
+            </View>
+          // </View>
           : 
           <View style={{alignItems: "center", padding: 30, borderWidth: 9, borderRadius: 1000, height: 300}}>
             <Text style={[{color: "#FFFFFF", fontSize: 30}, styles.sourceCodeProMedium]}>STARTING IN</Text>
