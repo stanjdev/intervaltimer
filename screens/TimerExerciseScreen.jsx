@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Animated, Text, View, StatusBar, Alert, Vibration, Image, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, StatusBar, Alert, Vibration, Image, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 import AppButton from '../components/AppButton';
 import { useIsFocused } from '@react-navigation/native';
 import { useKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
 import { useFonts } from 'expo-font';
 import useInterval from '../hooks/useInterval';
 import { LinearGradient } from 'expo-linear-gradient';
+import CircularProgress from "../components/CircularProgress";
 
 import { Audio } from 'expo-av';
 
@@ -24,16 +25,16 @@ export default function TimerExerciseScreen({ route, navigation }) {
     'SourceCodePro-SemiBold': require('../assets/fonts/Source_Code_Pro/SourceCodePro-SemiBold.ttf'),
   });
   
-  const [ overlay, setOverlay ] = useState(true);
-  const overlayFade = useRef(new Animated.Value(0)).current;
+  // const [ overlay, setOverlay ] = useState(true);
+  // const overlayFade = useRef(new Animated.Value(0)).current;
 
-  const overlayFader = () => {
-    Animated.timing(overlayFade, {
-      toValue: overlay ? 1 : 0,
-      duration: 200,
-      useNativeDriver: true
-    }).start();
-  }; 
+  // const overlayFader = () => {
+  //   Animated.timing(overlayFade, {
+  //     toValue: overlay ? 1 : 0,
+  //     duration: 200,
+  //     useNativeDriver: true
+  //   }).start();
+  // }; 
 
   const { sets, workTime, rest, bellInterv } = route.params;
 
@@ -42,6 +43,9 @@ export default function TimerExerciseScreen({ route, navigation }) {
   const [ setsRemaining, setSetsRemaining ] = useState(sets);
   const [ mins, setMins ] = useState(Math.floor(workTime / 60));
   const [ secs, setSecs ] = useState(workTime % 60);
+
+  const colorLeft = workOrRest == "work" ? "#FAFF0050" : workOrRest == "rest" ? "#2D9CDB50" : "#6FCF97";
+  const colorRight = workOrRest == "work" ? "#FAFF0050" : workOrRest == "rest" ? "#2D9CDB50" : "#6FCF97";
 
   // // // SHORT 2 SEC TEST
   // const [ mins, setMins ] = useState(0);
@@ -102,8 +106,8 @@ export default function TimerExerciseScreen({ route, navigation }) {
         // navigation.navigate("MeditateTimerSetScreen");
       }, 6000);
     }
-    console.log("sessionSecs: " + sessionSecs);
-    setSessionSecs(sessionSecs => sessionSecs += 1);
+    // console.log("sessionSecs: " + sessionSecs);
+    // setSessionSecs(sessionSecs => sessionSecs += 1);
   }
 
 
@@ -280,6 +284,13 @@ export default function TimerExerciseScreen({ route, navigation }) {
   0 1 2 3
   */
 
+  const secsRemaining = (secs + mins * 60) ;
+  const fullTime = workOrRest === "work" ? workTime : rest;
+  const percent = secsRemaining / fullTime;
+  const degree = percent * 360;
+  console.log(secsRemaining, fullTime, percent, degree);
+
+
 
   return (
     <View style={{ flex: 1, resizeMode: "cover", position: "relative", zIndex: -10, backgroundColor: "#000000"}}>
@@ -311,7 +322,8 @@ export default function TimerExerciseScreen({ route, navigation }) {
           //   width: 312
           // }}>
             <View style={[styles.mainCircle, {
-              borderColor: workOrRest == "work" ? "#FAFF00" : workOrRest == "rest" ? "#2D9CDB" : "#6FCF97",
+              borderColor: workOrRest == "complete" ? "#6FCF97" : "#828282"
+              // borderColor: workOrRest == "work" ? "#FAFF00" : workOrRest == "rest" ? "#2D9CDB" : "#6FCF97",
               // backgroundColor: workOrRest == "work" ? "linear-gradient(347.78deg, #FAFF00 13.14%, rgba(250, 255, 0, 0) 87.81%);" : workOrRest == "rest" ? "#2D9CDB" : "#6FCF97",
             }]}>
               {/* <LinearGradient 
@@ -341,6 +353,9 @@ export default function TimerExerciseScreen({ route, navigation }) {
                   { rotate: secs * 0.10 },
                 ]
               }}></View> */}
+              <View style={{position: "absolute"}}>
+                <CircularProgress workOrRest={workOrRest} percent={percent} leftColor={colorLeft} rightColor={colorRight} rotation={degree} />
+              </View>
                 <Text style={[{color: "#FFFFFF", fontSize: workOrRest == "complete" ? 48 : 41, textAlign: "center"}, styles.sourceCodeProMedium]}>{timerRunning && workOrRest == "work" ? "WORK" : timerRunning && workOrRest == "rest" ? "REST" : workOrRest == "complete" ? "WORKOUT COMPLETE" : "PAUSED"}</Text>
                 <Text style={[ styles.timerText, timerRunning ? null : styles.timerStrikeThrough ]}>{workOrRest == "complete" ? null : `${mins}:${leadingZero(secs)}`}</Text>
               
