@@ -9,6 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import CircularProgress from "../components/CircularProgress";
 
 import { Audio } from 'expo-av';
+import { Sound } from 'expo-av/build/Audio';
 
 const { width, height } = Dimensions.get('window');
 
@@ -72,20 +73,22 @@ export default function TimerExerciseScreen({ route, navigation }) {
       // if still sets exist, continue with work/rest sets
       console.log("sets remaining: ", setsRemaining);
       if (workOrRest === "work") {
+        playSetEndSound();
+        
         setMins(Math.floor(rest / 60));
         setSecs(rest % 60);
-        
-        // // // SHORT 2 SEC TEST
+        // // // SHORT 2 SEC TEST for REST
         // setMins(0);
         // setSecs(2);
 
         setWorkOrRest("rest");
       } else if (workOrRest === "rest") {
         setSetsRemaining(setsRemaining - 1);
+        playStartSound();
+
         setMins(Math.floor(workTime / 60));
         setSecs(workTime % 60);
-        
-        // // // SHORT 2 SEC TEST
+        // // // SHORT 2 SEC TEST for WORK
         // setMins(0);
         // setSecs(2);
         
@@ -112,10 +115,9 @@ export default function TimerExerciseScreen({ route, navigation }) {
 
 
 
-
-
   // BELL SOUND - useInterval()  
   const bellSound = new Audio.Sound();
+
   Audio.setAudioModeAsync({
     playsInSilentModeIOS: true, 
     staysActiveInBackground: true,
@@ -124,20 +126,60 @@ export default function TimerExerciseScreen({ route, navigation }) {
     playThroughEarpieceAndroid: true,
     interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
   });
-
-  const playBell = async () => await bellSound.replayAsync();
-  const playBellFirst = async () => await bellSound.playAsync();
-
-  const loadSound = async () => {
+  
+  const playStartSound = async () => {
+    const startSound = new Audio.Sound();
     try {
       await bellSound.loadAsync(require('../assets/audio/singing-bowl.mp3'));
-      // bellInterv === null ? null : await bellSound.playAsync();
-      console.log("load sound!");
+      await startSound.loadAsync(require('../assets/audio/sound-effects-interval-timer/START-SOUND.mp3'));
+      await startSound.playAsync();
+      setTimeout(() => {
+        startSound.unloadAsync();
+      }, 3000);
     } catch (error) {
       console.log(error);
     }
     // // https://docs.expo.io/versions/latest/sdk/audio/?redirected#parameters
   }
+
+  let playCountDownSound = async () => {
+    const countDownSound = new Audio.Sound();
+    try {
+      await countDownSound.loadAsync(require('../assets/audio/sound-effects-interval-timer/COUNTDOWN-SOUND.mp3'));
+      await countDownSound.playAsync();
+      setTimeout(() => {
+        countDownSound.unloadAsync();
+      }, 4000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const playPauseSound = async () => {
+    const pauseSound = new Audio.Sound();
+    try {
+      await pauseSound.loadAsync(require('../assets/audio/sound-effects-interval-timer/PAUSE-SOUND.mp3'));
+      await pauseSound.playAsync();
+      setTimeout(() => {
+        pauseSound.unloadAsync();
+      }, 3000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const playSetEndSound = async () => {
+    const setEndSound = new Audio.Sound();
+    try {
+      await setEndSound.loadAsync(require('../assets/audio/sound-effects-interval-timer/END-OF-SET-SOUND.mp3'));
+      await setEndSound.playAsync();
+      setTimeout(() => {
+        setEndSound.unloadAsync();
+      }, 3000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // FINISHED BELL SOUND
   const finishedSound = new Audio.Sound();
@@ -145,23 +187,23 @@ export default function TimerExerciseScreen({ route, navigation }) {
 
   const loadFinishedSound = async () => {
     try {
-      await finishedSound.loadAsync(require('../assets/audio/meditation-finished-sound.mp3'));
+      await finishedSound.loadAsync(require('../assets/audio/sound-effects-interval-timer/END-OF-WORKOUT-SOUND.mp3'));
       await finishedSound.playAsync()
-      console.log("finished bell loaded!")
+      console.log("END-OF-WORKOUT-SOUND loaded!")
     } catch (error) {
       console.log(error);
     }
   }
 
 
-
-
-
   const countOff = () => {
+    playCountDownSound(); // first beep
     const threeTwoOne = setInterval(() => {
-      setCountOffNum(countOffNum => countOffNum = countOffNum - 1)
+      setCountOffNum(countOffNum => countOffNum = countOffNum - 1);
+      playCountDownSound(); // 2nd and 3rd beep
     }, 1000);
     setTimeout(() => {
+      playStartSound();
       setCountOffDone(true);
       clearInterval(threeTwoOne);
     }, 3000);
@@ -169,9 +211,6 @@ export default function TimerExerciseScreen({ route, navigation }) {
   
   useEffect(() => {
     // MOUNT
-    // loadSound();
-    // playBellFirst();
-    console.log("useEffect loadSound mounted/started!");
     console.log(bellInterv);
     toggleClock();
     countOff();
@@ -197,13 +236,14 @@ export default function TimerExerciseScreen({ route, navigation }) {
   }, 1000);
 
   const [toggleBell, runningBell] = useInterval(() => {
-    timerRunning ? loadSound() : null;
+    timerRunning ? null : null;
   }, bellInterv);
 
-  const toggle = () => {
+  const toggle = async () => {
     toggleClock();
     bellInterv === null ? null : toggleBell();
     setTimerRunning(!timerRunning);
+    playPauseSound();
   }
 
   const [sessionSecs, setSessionSecs] = useState(0);
@@ -239,7 +279,7 @@ export default function TimerExerciseScreen({ route, navigation }) {
     setMins(Math.floor(workTime / 60));
     setSecs(workTime % 60);
 
-    // // // SHORT 1 SEC TEST
+    // // // SHORT 1 SEC TEST for RESTART
     // setMins(0);
     // setSecs(1);
     
