@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View, StatusBar, Image, Dimensions, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import AppButton from '../components/AppButton';
 import { useIsFocused } from '@react-navigation/native';
@@ -17,6 +17,26 @@ export default function SavePresetScreen({ navigation, route }) {
     
   const { sets, workTime, rest } = route.params;
 
+  const [ presetInfo, setPresetInfo ] = useState({
+    presetName: "",
+    numSets: sets,
+    workTime: workTime,
+    restTime: rest
+  });
+
+  const presetNameInputChange = value => {
+    if (value.length !== 0) {
+      setPresetInfo({
+        ...presetInfo,
+        presetName: value
+      });
+    } else {
+      setPresetInfo({
+        ...presetInfo,
+        presetName: ""
+      })
+    }
+  };
 
   return (
     <View style={{ flex: 1, resizeMode: "cover", justifyContent: "center", backgroundColor: "black" }}>
@@ -33,7 +53,9 @@ export default function SavePresetScreen({ navigation, route }) {
               <Text style={{textAlign: "center", fontSize: 14, fontFamily: "SourceCodePro-Medium", color: "#FFF"}}>NAME YOUR PRESET</Text>
               <TextInput 
                 placeholder="NEW WORKOUT" 
-                placeholderTextColor="#828282" 
+                placeholderTextColor="#828282"
+                onChangeText={value => presetNameInputChange(value)} 
+                autoCapitalize="characters"
                 style={[{ 
                   backgroundColor: "#333333", 
                   color: "#FFFFFF", 
@@ -53,9 +75,10 @@ export default function SavePresetScreen({ navigation, route }) {
 
             <AppButton 
               title="SAVE"
-              buttonStyles={styles.yellowButton}
+              buttonStyles={[styles.buttonStyle, !presetInfo.presetName ? styles.disabledButton : styles.yellowButton]}
               buttonTextStyles={styles.buttonText}
-              onPress={() => console.log("save pressed")}
+              disabled={!presetInfo.presetName}
+              onPress={() => console.log(presetInfo)}
             />
 
           </View>
@@ -66,8 +89,7 @@ export default function SavePresetScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  yellowButton: {
-    backgroundColor: "#FAFF00",
+  buttonStyle: {
     height: 47,
     width: width * 0.8,
     borderRadius: 8,
@@ -77,6 +99,12 @@ const styles = StyleSheet.create({
     shadowColor: "black",
     shadowOpacity: 0.2,
     shadowOffset: {width: 3, height: 3}
+  },
+  yellowButton: {
+    backgroundColor: "#FAFF00",
+  },
+  disabledButton: {
+    backgroundColor: "rgba(250, 255, 0, 0.5)",
   },
   buttonText: {
     color: "#000",

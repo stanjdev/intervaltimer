@@ -84,7 +84,7 @@ export default function TimerSetScreen({ navigation, route }) {
   return (
     <View style={{ flex: 1, resizeMode: "cover", justifyContent: "center", backgroundColor: "black" }}>
       {isFocused ? <StatusBar hidden={false} barStyle="light-content"/> : null} 
-      <TouchableOpacity onPress={() => console.log("to library!")} style={{ padding: 10, position: "absolute", top: height * 0.068, zIndex: 100, left: 10,   }}>
+      <TouchableOpacity onPress={() => navigation.navigate('PresetsLibraryScreen')} style={{ padding: 10, position: "absolute", top: height * 0.068, zIndex: 100, left: 10,   }}>
         <Image source={require('../assets/screen-icons/library.png')} style={{ height: 13, width: 23 }} resizeMode="contain"/>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('SavePresetScreen', { sets, workTime, rest })} style={{ padding: 10, position: "absolute", top: height * 0.063, right: width * 0.05, zIndex: 100,  }}>

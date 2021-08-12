@@ -99,7 +99,6 @@ export default function TimerExerciseScreen({ route, navigation }) {
       setWorkOrRest("complete");
       setTimerRunning(false);
       bellSound.unloadAsync();
-      // console.log('else');
       loadFinishedSound(); // final 3 bells because of the 2 sec setTimeout below.
       clear();
       // deactivateKeepAwake();
@@ -328,7 +327,7 @@ export default function TimerExerciseScreen({ route, navigation }) {
   const fullTime = workOrRest === "work" ? workTime : rest;
   const percent = secsRemaining / fullTime;
   const degree = percent * 360;
-  console.log(secsRemaining, fullTime, percent, degree);
+  console.log("degrees for semiCircles line 330: ", secsRemaining, fullTime, percent, degree);
 
 
 

@@ -15,6 +15,7 @@ import MySplashScreen from '../screens/MySplashScreen';
 import TimerExerciseScreen from '../screens/TimerExerciseScreen';
 import TimerSetScreen from '../screens/TimerSetScreen';
 import SavePresetScreen from '../screens/SavePresetScreen';
+import PresetsLibraryScreen from '../screens/PresetsLibraryScreen';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,7 @@ function RootNavigator() {
       <Stack.Screen options={{headerShown:false, ...TransitionPresets.ScaleFromCenterAndroid }} name="MySplashScreen" component={MySplashScreen} />
       <Stack.Screen options={{headerShown:false, ...TransitionPresets.ScaleFromCenterAndroid }} name="TimerSetScreen" component={TimerSetScreen} />
       <Stack.Screen options={{headerShown:false, ...TransitionPresets.RevealFromBottomAndroid }} name="SavePresetScreen" component={SavePresetScreen} />
+      <Stack.Screen options={{headerShown:false, ...TransitionPresets.RevealFromBottomAndroid }} name="PresetsLibraryScreen" component={PresetsLibraryScreen} />
       <Stack.Screen options={{headerShown:false, ...TransitionPresets.ScaleFromCenterAndroid }} name="TimerExerciseScreen" component={TimerExerciseScreen} />
     </Stack.Navigator>
   )
