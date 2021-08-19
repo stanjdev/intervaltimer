@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
     width: 312,
     resizeMode: "contain",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    transform: [{rotateY: "180deg"}]
   },
   body: {
     flex: 2,
@@ -90,11 +91,13 @@ const styles = StyleSheet.create({
   titleText: {
     color: "white",
     fontSize: 30,
-    marginBottom: 15
+    marginBottom: 15,
+    transform: [{rotateY: "180deg"}]
   },
   subTitleText: {
     color: "#828282",
     fontSize: 20,
+    transform: [{rotateY: "180deg"}]
   },
   sourceCodeProMedium: {
     fontFamily: 'SourceCodePro-Medium'

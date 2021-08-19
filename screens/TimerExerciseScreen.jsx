@@ -413,11 +413,9 @@ export default function TimerExerciseScreen({ route, navigation }) {
             <View style={{ 
               flexDirection: "row", 
               flexWrap: "wrap", 
-              width: 122, 
               marginTop: 15,
-              // justifyContent: "center",
-              // borderColor: "orange", 
-              // borderWidth: 1
+              width: sets <= 8 ? 122 : width * 0.8,
+              justifyContent: sets == 9 ? "center" : null
             }}>
               {renderIntervalBalls()}
               {/* <View style={{ borderColor: "#FAFF00", backgroundColor: "#FAFF00", height: 20, width: 20, borderRadius: 50, borderWidth: 2 }}></View>

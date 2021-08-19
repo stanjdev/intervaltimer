@@ -38,6 +38,18 @@ export default function SavePresetScreen({ navigation, route }) {
     }
   };
 
+  const [ saveButtonPressed, setSaveButtonPressed ] = useState(false);
+
+  function saveAndGoBack(presetInfo) {
+    setSaveButtonPressed(true);
+
+    // Store into localStorage
+    
+    setTimeout(() => {
+      navigation.navigate('TimerSetScreen', { presetInfo });
+    }, 2000)
+  };
+
   return (
     <View style={{ flex: 1, resizeMode: "cover", justifyContent: "center", backgroundColor: "black" }}>
       {isFocused ? <StatusBar hidden={false} barStyle="light-content"/> : null} 
@@ -56,6 +68,7 @@ export default function SavePresetScreen({ navigation, route }) {
                 placeholderTextColor="#828282"
                 onChangeText={value => presetNameInputChange(value)} 
                 autoCapitalize="characters"
+                autoFocus
                 style={[{ 
                   backgroundColor: "#333333", 
                   color: "#FFFFFF", 
@@ -74,11 +87,11 @@ export default function SavePresetScreen({ navigation, route }) {
             </View>
 
             <AppButton 
-              title="SAVE"
-              buttonStyles={[styles.buttonStyle, !presetInfo.presetName ? styles.disabledButton : styles.yellowButton]}
+              title={saveButtonPressed ? "SAVING..." : "SAVE"}
+              buttonStyles={[styles.buttonStyle, !presetInfo.presetName || saveButtonPressed ? styles.disabledButton : styles.yellowButton]}
               buttonTextStyles={styles.buttonText}
-              disabled={!presetInfo.presetName}
-              onPress={() => console.log(presetInfo)}
+              disabled={!presetInfo.presetName || saveButtonPressed}
+              onPress={() => saveAndGoBack(presetInfo)}
             />
 
           </View>

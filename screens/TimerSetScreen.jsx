@@ -17,6 +17,8 @@ export default function TimerSetScreen({ navigation, route }) {
   const [bellIntervDisplay, setBellIntervDisplay] = useState(4);
   const [bellInterv, setBellInterv] = useState(30000);
 
+  const { presetInfo } = route.params;
+
   const onChange = async (value, state, setter) => {
     if (setter == setWorkTime || setter == setRest) {
       setter(Math.floor(value * 30));
@@ -91,7 +93,7 @@ export default function TimerSetScreen({ navigation, route }) {
         <Image source={require('../assets/screen-icons/plus-symbol.png')} style={{height: 20, width: 20}} resizeMode="contain"/>
       </TouchableOpacity>
       <View style={{marginTop: 20}}>
-        <Text style={ [{textAlign: "center", fontSize: 20, color: "#828282"}, styles.sourceCodeProMedium] }>NEW WORKOUT</Text>
+        <Text style={ [{textAlign: "center", fontSize: 20, color: "#828282"}, styles.sourceCodeProMedium] }>{presetInfo ? presetInfo.presetName : "NEW WORKOUT"}</Text>
         <View style={{flexDirection: "row", padding: 20}}>
           <View style={{backgroundColor: "black", flex: 1, height: height * 0.8, justifyContent: "space-around", alignItems: "center" }}>
 
@@ -104,7 +106,7 @@ export default function TimerSetScreen({ navigation, route }) {
               <SliderComponent
                 name="SETS"
                 state={sets}
-                maxValue={15}
+                maxValue={20}
                 onChange={e => onChange(e, sets, setSets)}
               />
               <SliderComponent

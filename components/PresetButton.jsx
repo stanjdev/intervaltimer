@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View, Text, Image, Dimensions, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, Image, Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { useFonts } from 'expo-font';
 const { width, height } = Dimensions.get('window');
 
@@ -14,16 +14,18 @@ export default function PresetButton ({onPress, presetName, sets=4, workTime=120
   });
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.button} >
-      <View style={{flexDirection: "column"}}>
-        <Text style={[styles.presetNameTextStyle, styles.sourceCodeProMedium]}>{presetName}</Text>
-        <View style={[styles.subTextStyle]}>
-          <Text style={styles.subTextFont}>{sets} SETS</Text>
-          <Text style={styles.subTextFont}>{`${Math.floor(workTime / 60)}:${workTime % 60 || "00"}`} WORK</Text>
-          <Text style={styles.subTextFont}>{`${Math.floor(restTime / 60)}:${restTime % 60 || "00"}`} REST</Text>
-        </View>
+    <TouchableWithoutFeedback onPress={onPress} >
+      <View style={styles.button}>
+          <View style={{flexDirection: "column"}}>
+            <Text style={[styles.presetNameTextStyle, styles.sourceCodeProMedium]}>{presetName}</Text>
+            <View style={[styles.subTextStyle]}>
+              <Text style={styles.subTextFont}>{sets} SETS</Text>
+              <Text style={styles.subTextFont}>{`${Math.floor(workTime / 60)}:${workTime % 60 || "00"}`} WORK</Text>
+              <Text style={styles.subTextFont}>{`${Math.floor(restTime / 60)}:${restTime % 60 || "00"}`} REST</Text>
+            </View>
+          </View>
       </View>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 };
 
