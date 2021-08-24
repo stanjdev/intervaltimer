@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "Interval Timer",
-    "description": "Interval Timer by Semicircle Labs",
+    "name": "Ultimate Interval Timer",
+    "description": "Ultimate Interval Timer by Semicircle Labs",
     "slug": "Interval-Timer",
-    "version": "1",
+    "version": "1.1",
     "orientation": "portrait",
     "icon": "./assets/placeholder-app-icon.png",
     "splash": {
@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "com.semicirclelabs.intervaltimer",
-      "versionCode": 1,
+      "versionCode": 1.1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/placeholder-app-icon.png",
         "backgroundColor": "#000000"
