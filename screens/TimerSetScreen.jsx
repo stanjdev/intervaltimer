@@ -7,9 +7,12 @@ import { useFonts } from 'expo-font';
 import * as Font from 'expo-font';
 import * as Haptics from 'expo-haptics';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const { width, height } = Dimensions.get('window');
 
 export default function TimerSetScreen({ navigation, route }) {
+  const [presetName, setPresetName] = useState("NEW WORKOUT");
   const [sets, setSets] = useState(4);
   const [workTime, setWorkTime] = useState(120);
   const [rest, setRest] = useState(180);
@@ -30,10 +33,40 @@ export default function TimerSetScreen({ navigation, route }) {
     }
   };
 
+  // whenever sliders are adjusted
   useEffect(() => {
     setTotalDuration(sets * (workTime + rest) - rest);
-    // console.log(totalDuration);
+    // setPresetName("NEW WORKOUT");
   }, [sets, workTime, rest])
+
+  // whenever new preset is created, or pressed on from presets library
+  useEffect(() => {
+    if (presetInfo) {
+      setSets(presetInfo.numSets);
+      setWorkTime(presetInfo.workTime);
+      setRest(presetInfo.restTime);  
+    }
+  }, [presetInfo])
+
+  // resets name if preset is deleted by checking if current preset exists in async storage still.
+  useEffect(() => {
+    // console.log("current preset info:", presetInfo);
+    setTimeout(async () => {
+      let storedPreset = await AsyncStorage.getItem('presetsArray');
+      let presetsArr = storedPreset ? await JSON.parse(storedPreset) : null;
+      if (presetInfo && presetsArr) {
+        let idx = presetsArr.map(preset => preset.presetName).indexOf(presetInfo.presetName); // either -1 or int
+        // console.log("idx:", idx, ", name:", presetInfo.presetName);
+        if (idx >= 0) {
+          // console.log("if statement, idx found: preset name", presetsArr[idx].presetName);
+          setPresetName(presetsArr[idx].presetName);
+        } else setPresetName("NEW WORKOUT");
+      } else {
+        setPresetName("NEW WORKOUT");
+      }
+    }, 0);
+  },)
+
 
   const onChangeSecs = async (value) => {
     const bellOptions = {
@@ -79,7 +112,7 @@ export default function TimerSetScreen({ navigation, route }) {
   const startTimerExercise = () => {
     // incrementStreak();
     setTimeout(() => {
-      navigation.navigate('TimerExerciseScreen', { sets, workTime, rest, bellInterv });
+      navigation.navigate('TimerExerciseScreen', { presetName, sets, workTime, rest, bellInterv });
     }, 0);
   }
 
@@ -93,7 +126,7 @@ export default function TimerSetScreen({ navigation, route }) {
         <Image source={require('../assets/screen-icons/plus-symbol.png')} style={{height: 20, width: 20}} resizeMode="contain"/>
       </TouchableOpacity>
       <View style={{marginTop: 20}}>
-        <Text style={ [{textAlign: "center", fontSize: 20, color: "#828282"}, styles.sourceCodeProMedium] }>{presetInfo ? presetInfo.presetName : "NEW WORKOUT"}</Text>
+        <Text style={ [{textAlign: "center", fontSize: 20, color: "#828282"}, styles.sourceCodeProMedium] }>{presetName}</Text>
         <View style={{flexDirection: "row", padding: 20}}>
           <View style={{backgroundColor: "black", flex: 1, height: height * 0.8, justifyContent: "space-around", alignItems: "center" }}>
 

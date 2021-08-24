@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, Alert, StyleSheet, StatusBar, Dimensions, ImageBackground, TouchableOpacity, Image, ScrollView, TouchableWithoutFeedback} from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -7,6 +7,8 @@ const { width, height } = Dimensions.get('window');
 const bgImage = require('../assets/splash/splash-screen-ellipse.png');
 import PresetButton from '../components/PresetButton';
 const trashcan = require('../assets/screen-icons/trashcan.png');
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { SwipeListView } from 'react-native-swipe-list-view';
 
@@ -19,38 +21,58 @@ export default function PresetsLibraryScreen ({ route, navigation }) {
     'SourceCodePro-SemiBold': require('../assets/fonts/Source_Code_Pro/SourceCodePro-SemiBold.ttf'),
   });
 
+  const [ presetsLib, setPresetsLib ] = useState([]);
+
   const goBack = () => {
     navigation.navigate("TimerSetScreen");
   }
 
-  const myData = [
+  useEffect(() => {
+    setTimeout(async() => {
+      let storedPresets = await AsyncStorage.getItem('presetsArray');
+      // let presetsArr = storedPresets ? await JSON.parse(storedPresets) : sampleWorkouts;
+      let presetsArr = storedPresets ? await JSON.parse(storedPresets) : new Array();
+      setPresetsLib(presetsArr);
+    }, 0)
+  }, [])
+
+  const sampleWorkouts = [
     {
       key: "1",
-      name: "LEG DAY #2"
+      presetName: "SAMPLE WORKOUT 1",
+      numSets: 10,
+      workTime: 180,
+      restTime: 360,
     }, {
       key: "2",
-      name: "FRIDAY HIIT"
+      presetName: "FRIDAY HIIT",
+      numSets: 10,
+      workTime: 180,
+      restTime: 360,
     }, {
       key: "3",
-      name: "SLOW CHEST WORKOUT"
+      presetName: "SLOW CHEST WORKOUT",
+      numSets: 10,
+      workTime: 180,
+      restTime: 360,
     }, {
       key: "4",
-      name: "LEG DAY #2"
+      presetName: "SAMPLE WORKOUT 2",
+      numSets: 10,
+      workTime: 180,
+      restTime: 360,
     }, {
       key: "5",
-      name: "FRIDAY HIIT"
+      presetName: "FRIDAY HIIT",
+      numSets: 10,
+      workTime: 180,
+      restTime: 360,
     }, {
       key: "6",
-      name: "SLOW CHEST WORKOUT"
-    }, {
-      key: "7",
-      name: "LEG DAY #2"
-    }, {
-      key: "8",
-      name: "FRIDAY HIIT"
-    }, {
-      key: "9",
-      name: "SLOW CHEST WORKOUT"
+      presetName: "SLOW CHEST WORKOUT",
+      numSets: 10,
+      workTime: 180,
+      restTime: 360,
     }
   ];
 
@@ -58,21 +80,50 @@ export default function PresetsLibraryScreen ({ route, navigation }) {
     if (rowMap[rowKey]) rowMap[rowKey].closeRow();
   };
 
-  const deleteItem = () => {
-    Alert.alert("DEKLETLKEJ?", "You will have to restart from the beginning if you exit.", [
-      {text: "Delete", style: "cancel", onPress: () => console.log("delte butteon")}, 
-      {text: "Cancel", style: "cancel", onPress: () => console.log("continued")}
+  const deleteItem = (data, rowMap) => {
+    Alert.alert("Delete this preset?", "This action cannot be undone.", [
+      {text: "Delete", style: "cancel", onPress: async () => {
+        // closeRow(rowMap, data.item.key);
+
+        // get the AsyncStored array
+        let storedPresets = await AsyncStorage.getItem('presetsArray');
+        let presetsArr = await JSON.parse(storedPresets);
+        
+        // remove specific exercise from array
+        let indexToDelete = presetsArr.map(preset => preset.key).indexOf(data.item.key);
+        presetsArr.splice(indexToDelete, 1);
+
+        // remove entire previous async stored array
+        await AsyncStorage.removeItem('presetsArray');
+
+        // to set a new array to async storage
+        await AsyncStorage.setItem('presetsArray', JSON.stringify(presetsArr));
+        setPresetsLib(presetsArr);
+      }}, 
+      {text: "Cancel", onPress: () => closeRow(rowMap, data.item.key)}
     ]);
   };
 
+  // useEffect(() => {
+
+  // }, [deleteItem])
+
+
   const renderFrontItem = (data, i) => (
     <View>
-      <PresetButton key={data.item.name} presetName={data.item.name} onPress={() => console.log(data.item.name)}/>
+      <PresetButton 
+        key={data.item.presetName} 
+        presetName={data.item.presetName} 
+        sets={data.item.numSets}
+        workTime={data.item.workTime}
+        restTime={data.item.restTime}
+        onPress={() => navigation.navigate('TimerSetScreen', { presetInfo: data.item })}
+      />
     </View>
   );
 
   const renderHiddenItem = (data, rowMap) => (
-    <TouchableWithoutFeedback onPress={deleteItem}>
+    <TouchableWithoutFeedback onPress={() => deleteItem(data, rowMap)}>
       <View style={styles.rowBack}>
         <View style={{alignSelf: "flex-end", alignItems: "center", marginRight: 27 }}>
           <Image source={trashcan} style={{ height: 20, width: 20 }} resizeMode="contain"></Image>
@@ -95,9 +146,10 @@ export default function PresetsLibraryScreen ({ route, navigation }) {
       </View>
 
 
+    {presetsLib.length ? 
       <View style={{ alignItems: "center", marginTop: height * 0.17, marginBottom: height * 0.05 }}>
         <SwipeListView
-          data={myData}
+          data={presetsLib}
           renderItem={renderFrontItem}
           renderHiddenItem={renderHiddenItem}
           rightOpenValue={-95}
@@ -109,9 +161,8 @@ export default function PresetsLibraryScreen ({ route, navigation }) {
           // onRowOpen={rowKey => console.log(`opened ${rowKey}`)}
         />
       </View>
-
-      {/* IF EMPTY LIBRARY: */}
-      {/* <View style={{height: height, width: width, justifyContent: "center", alignItems: "center" }}>
+    :
+      <View style={{height: height, width: width, justifyContent: "center", alignItems: "center" }}>
         <ImageBackground source={bgImage} style={styles.image}>
           <Text style={[styles.titleText, styles.sourceCodeProMedium]}>NO SAVED PRESETS</Text>
         </ImageBackground>
@@ -121,8 +172,8 @@ export default function PresetsLibraryScreen ({ route, navigation }) {
           buttonTextStyles={[styles.buttonText, styles.sourceCodeProMedium]}
           onPress={goBack}
         />
-      </View> */}
-
+      </View>
+    }
 
 
       {/* OLD WAY, SHOW Programmatically rendered PRESETS: */}
@@ -160,7 +211,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     justifyContent: "center",
     alignItems: "center",
-    transform: [{rotateY: "180deg"}]
+    // transform: [{rotateY: "180deg"}]
   },
   button: {
     height: 47,
@@ -187,7 +238,7 @@ const styles = StyleSheet.create({
   titleText: {
     color: "white",
     fontSize: 24,
-    transform: [{rotateY: "180deg"}]
+    // transform: [{rotateY: "180deg"}]
   },
   subTitleText: {
     color: "#828282",

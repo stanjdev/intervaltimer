@@ -37,7 +37,7 @@ export default function TimerExerciseScreen({ route, navigation }) {
   //   }).start();
   // }; 
 
-  const { sets, workTime, rest, bellInterv } = route.params;
+  const { presetName, sets, workTime, rest, bellInterv } = route.params;
 
   const [ workOrRest, setWorkOrRest ] = useState("work");
   const [ timerRunning, setTimerRunning ] = useState(true);
@@ -45,8 +45,8 @@ export default function TimerExerciseScreen({ route, navigation }) {
   const [ mins, setMins ] = useState(Math.floor(workTime / 60));
   const [ secs, setSecs ] = useState(workTime % 60);
 
-  const colorLeft = workOrRest == "work" ? "#FAFF0050" : workOrRest == "rest" ? "#2D9CDB50" : "#6FCF97";
-  const colorRight = workOrRest == "work" ? "#FAFF0050" : workOrRest == "rest" ? "#2D9CDB50" : "#6FCF97";
+  const colorLeft = workOrRest == "work" ? "#FAFF0040" : workOrRest == "rest" ? "#2D9CDB40" : "#6FCF97";
+  const colorRight = workOrRest == "work" ? "#FAFF0040" : workOrRest == "rest" ? "#2D9CDB40" : "#6FCF97";
 
   // // // SHORT 2 SEC TEST
   // const [ mins, setMins ] = useState(0);
@@ -59,7 +59,6 @@ export default function TimerExerciseScreen({ route, navigation }) {
       }
       return time;
   };
-  
 
   // useInterval() ATTEMPT - ghetto, but works for the most part. once it hits 00:00, it still hits the else, and still runs every second. BUT DESTRUCTURING THE CLEAR() METHOD FROM USEINTERVAL FUNCTION AND CALLING THAT WORKS!
   // COUNTDOWN - useInterval()
@@ -339,7 +338,7 @@ export default function TimerExerciseScreen({ route, navigation }) {
         <TouchableOpacity onPress={goBack} style={{ padding: 15}}>
           <Image source={require('../assets/screen-icons/back-arrow-white.png')} style={{height: 20, marginLeft: 0}} resizeMode="contain"/>
         </TouchableOpacity>
-        <Text style={[{textAlign: "center", fontSize: 20, color: "#828282", position: "absolute", zIndex: -1, width: width}, styles.sourceCodeProMedium]}>LEG DAY #2</Text>        
+        <Text style={[{textAlign: "center", fontSize: 20, color: "#828282", position: "absolute", zIndex: -1, width: width}, styles.sourceCodeProMedium]}>{presetName}</Text>        
       </View>
 
       <View style={{ justifyContent: "space-evenly", alignItems: "center", height: height * 0.96, width: width, marginTop: 25 }}>

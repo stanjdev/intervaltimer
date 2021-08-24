@@ -37,7 +37,7 @@ export default function MySplashScreen ({ route, navigation }) {
         />
         <View style={{height: height, width: width, justifyContent: "center", alignItems: "center"}}>
           <ImageBackground source={bgImage} style={styles.image}>
-            <Text style={[styles.titleText, styles.sourceCodeProMedium]}>INTERVAL TIMER</Text>
+            <Text style={[styles.titleText, styles.sourceCodeProMedium]}>ULTIMATE INTERVAL TIMER</Text>
             <Text style={[styles.subTitleText, styles.sourceCodeProMedium]}>by Semicircle Labs</Text>
           </ImageBackground>
         </View>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     justifyContent: "center",
     alignItems: "center",
-    transform: [{rotateY: "180deg"}]
+    // transform: [{rotateY: "180deg"}]
   },
   body: {
     flex: 2,
@@ -92,12 +92,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 30,
     marginBottom: 15,
-    transform: [{rotateY: "180deg"}]
+    // transform: [{rotateY: "180deg"}],
+    width: 300,
+    textAlign: "center"
   },
   subTitleText: {
     color: "#828282",
     fontSize: 20,
-    transform: [{rotateY: "180deg"}]
+    // transform: [{rotateY: "180deg"}]
   },
   sourceCodeProMedium: {
     fontFamily: 'SourceCodePro-Medium'

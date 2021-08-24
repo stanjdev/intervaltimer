@@ -18,6 +18,7 @@ export default function HalfCircle ({ percent, workOrRest, color, leftBorderColo
     }}>
       <View style={{
         backgroundColor: color,
+        // backgroundColor: "000000",
         borderWidth: 9, 
         borderColor: leftBorderColor ? leftBorderColor 
           : workOrRest == "work" && percent >= 0.5 ? "#FAFF00" 

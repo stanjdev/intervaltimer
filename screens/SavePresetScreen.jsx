@@ -4,6 +4,8 @@ import AppButton from '../components/AppButton';
 import { useIsFocused } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const { width, height } = Dimensions.get('window');
 
 export default function SavePresetScreen({ navigation, route }) {
@@ -21,14 +23,16 @@ export default function SavePresetScreen({ navigation, route }) {
     presetName: "",
     numSets: sets,
     workTime: workTime,
-    restTime: rest
+    restTime: rest,
+    key: ""
   });
 
   const presetNameInputChange = value => {
     if (value.length !== 0) {
       setPresetInfo({
         ...presetInfo,
-        presetName: value
+        presetName: value,
+        key: value
       });
     } else {
       setPresetInfo({
@@ -40,14 +44,23 @@ export default function SavePresetScreen({ navigation, route }) {
 
   const [ saveButtonPressed, setSaveButtonPressed ] = useState(false);
 
-  function saveAndGoBack(presetInfo) {
+  async function saveAndGoBack(presetInfo) {
     setSaveButtonPressed(true);
 
+    // await AsyncStorage.removeItem('presetsArray');
+    
     // Store into localStorage
+    let storedPresets = await AsyncStorage.getItem('presetsArray');
+    let presetsArr = storedPresets ? await JSON.parse(storedPresets) : new Array();
+    
+    // if there isn't a duplicate, store it normally: , else auto-generate a suffix to the key and name.
+    await presetsArr.push(presetInfo);
+    await AsyncStorage.setItem('presetsArray', JSON.stringify(presetsArr));
+    // console.log("presetsArr:", presetsArr);
     
     setTimeout(() => {
       navigation.navigate('TimerSetScreen', { presetInfo });
-    }, 2000)
+    }, 1000)
   };
 
   return (
@@ -69,6 +82,7 @@ export default function SavePresetScreen({ navigation, route }) {
                 onChangeText={value => presetNameInputChange(value)} 
                 autoCapitalize="characters"
                 autoFocus
+                autoCorrect={false}
                 style={[{ 
                   backgroundColor: "#333333", 
                   color: "#FFFFFF", 
